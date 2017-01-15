@@ -1,4 +1,4 @@
-package teststorm;
+package jp.co.teststorm;
 
 import storm.contrib.spring.topology.LocalTopologySubmitter;
 
