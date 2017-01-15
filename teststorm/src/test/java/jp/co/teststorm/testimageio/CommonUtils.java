@@ -6,8 +6,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.Collator;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.imageio.ImageIO;
 import javax.imageio.plugins.jpeg.JPEGImageReadParam;
@@ -56,6 +60,28 @@ public class CommonUtils {
 //		BufferedImage img = ImageIO.read(bais);
 //		ImageIO.write(img, format, baos);
 //		return baos.toByteArray();
+	}
+	
+	public static void unzipAndStore(byte[] bytes) {
+		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+		ZipInputStream zis = new ZipInputStream(bais);
+		byte[] buffer = new byte[1024];
+		try{
+			ZipEntry entry;
+			while((entry = zis.getNextEntry()) != null) {
+				if(!entry.isDirectory() && !entry.getName().contains("/")){
+					System.out.println(entry.getName() + " start");
+					FileOutputStream fos = new FileOutputStream(new File("unzip_" + entry.getName()));
+					int size = 0;
+					while(0 < (size = zis.read(buffer))){
+						fos.write(buffer, 0, size);
+					}	
+				}
+				zis.closeEntry();
+			}
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
